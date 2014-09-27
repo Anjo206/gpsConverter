@@ -1,0 +1,105 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Scanner;
+
+public class converter {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		//This is what we want as our OUTPUT
+		
+		//time,latitude,longitude
+		//Rainier,46.8533,-121.7599
+		
+		//What we are given:
+		
+		//Time: Sep 26, 2014 3:05:18 PM
+		//Type: Normal
+		//Speed: 1.9
+		//Lat.: 37.2964346
+		//Lon.: -120.47676196
+
+		
+		String filename= "locations.txt";	
+		
+		boolean time = false, lat = false, lon = false, speed = false;
+		
+		String fileheader = "name,desc,latitude,longitude";
+		String Line;
+		String Time = null;
+		String Lat = null;
+		String Lon = null;
+		String Speed = null;
+		 try {
+			Scanner input = new Scanner(new File(filename));
+			PrintWriter out = new PrintWriter("output.txt");
+			
+			out.println(fileheader);
+			while(input.hasNextLine()){
+				//System.out.println(input.nextLine());
+				Line= input.nextLine();
+				if(Line.contains("Time:")){
+					//System.out.println(Line);
+					Scanner reader1= new Scanner(Line).useDelimiter("Time: Sep 25, 2014 ");
+					//System.out.println(reader.next());
+					Time = reader1.next();
+					time=true;	
+					reader1.close();
+				}
+				if(Line.contains("Speed:")){
+					//System.out.println(Line);
+					Scanner reader2= new Scanner(Line).useDelimiter("Speed: ");
+					//System.out.println(reader.next());
+					Speed = reader2.next();
+					speed=true;	
+					reader2.close();
+				}
+				if(Line.contains("Lat.:")){
+					//System.out.println(Line);
+					Scanner reader3= new Scanner(Line).useDelimiter("Lat.: ");
+					//System.out.println(reader.next());
+					Lat = reader3.next();
+					lat=true;
+					reader3.close();
+				}
+				if(Line.contains("Lon.:")){
+					//System.out.println(Line);
+					Scanner reader4= new Scanner(Line).useDelimiter("Lon.: ");
+					//System.out.println(reader.next());
+					Lon = reader4.next();
+					lon=true;
+					reader4.close();
+				}
+				
+				if(time == true  && lat == true && lon==true && speed ==true){ //Only if all 4 data are extracted, print the data.
+				//time,latitude,longitude
+				//System.out.println(Time + "," +Lat+"," + Lon);
+					Line=(Time + ","+Speed+"," +Lat+"," + Lon);
+					out.println(Line); //prints to output file.
+	
+					//reset the flags
+				time = false;
+				lat=false;
+				lon=false;
+				speed=false;
+				}		
+			}		
+			out.flush();
+			out.close();
+			input.close();
+			
+		
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(e); //displays to user
+		}
+	
+		System.out.println("Conversion complete"); //Tell the user task is complete.
+		
+	}
+
+}
